@@ -19,15 +19,55 @@ const GameBoard = (function () {
      ${b[6] || " "} | ${b[7] || " "} | ${b[8] || " "}
     `;
     };
-    return {getBoard, placeMark, resetBoard, printBoard};
+    return { getBoard, placeMark, resetBoard, printBoard };
 })();
 
+function createPlayer(name, mark) {
+    let score = 0;
+    const getScore = () => score;
+    const addPoint = () => ++score;
+    const resetScore = () => score = 0;
+    return { name, mark, getScore, addPoint, resetScore };
+}
 
-const GameMaster = (function(){
-    const winCondition = () => {
-        let currentBoard = GameBoard.getBoard();
-        // Do i need to map all the possible winning scenarios? 
-        // Maybe i just need a rule, like giving each board index a value, like 0 has a start, start value and 8 has an end end value, 4 has a mid, mid value? so maybe just check if the same mark is in.... nvm.
-        // 
+const GameMaster = (function () {
+    const player1 = createPlayer('1', 'X');
+    const player2 = createPlayer('2', 'O');
+
+
+    const declareWin = (player) => {
+        console.log(`${player.name} wins!`);
+        player.addPoint();
+    }
+
+    const playTurn = (player) => {
+        if (checkWinCondition()){
+            declareWin(player);
+            changePlayer();
+        };
+    }
+
+
+    const checkWinCondition = () => {
+        const winScenarios = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]]
+        const board = GameBoard.getBoard();
+        return winScenarios.some((scenario) => {
+            const firstIndex = scenario[0];
+            const secondIndex = scenario[1];
+            const thirdIndex = scenario[2];
+            if (board[firstIndex] !== null) {
+                if (board[firstIndex] === board[secondIndex] && board[secondIndex] === board[thirdIndex]){
+                    return true;
+                }
+            }
+        });
     }
 })();
