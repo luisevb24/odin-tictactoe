@@ -62,23 +62,30 @@ const GameMaster = (function () {
             addPoint();
         }
         const playTurn = () => {
-            let boardIndex = parseInt(prompt(`${name} Play your turn!`), 10);
+            let boardIndex = prompt(`${name} Play your turn!`);
+            if (boardIndex === null) return;
+            boardIndex = parseInt(boardIndex, 10);
             let placedMark = GameBoard.placeMark(boardIndex, mark);
             while (!placedMark) {
-                boardIndex = parseInt(prompt(`Invalid cell`), 10);
+                boardIndex = prompt(`Invalid cell`), 10;
+                if (boardIndex === null) return;
+                boardIndex = parseInt(boardIndex, 10);
                 placedMark = GameBoard.placeMark(boardIndex, mark);
             };
 
             if (checkWinCondition()) {
+                DOMMaster.renderBoard();
                 GameBoard.printBoard();
                 declareWin();
                 return true;
             }
             if (checkTie()) {
+                DOMMaster.renderBoard();
                 GameBoard.printBoard();
                 declareTie();
                 return true;
             }
+            DOMMaster.renderBoard();
             GameBoard.printBoard();
             return false;
         }
@@ -90,19 +97,42 @@ const GameMaster = (function () {
     const playRound = () => {
         GameBoard.resetBoard();
         GameBoard.printBoard();
+        DOMMaster.renderBoard();
         while (!player1.playTurn() && !player2.playTurn());
         console.log(`${player1.name}: ${player1.getScore()}  ${player2.name}: ${player2.getScore()}`);
     }
 
     const playGame = () => {
-        while(player1.getScore() < 3 && player2.getScore() < 3){
+        player1.resetScore();
+        player2.resetScore();
+        while (player1.getScore() < 3 && player2.getScore() < 3) {
             playRound();
         }
-        if (player1.getScore() === 3){
+        if (player1.getScore() === 3) {
             console.log(`${player1.name} is the winner!`);
-        } else if (player2.getScore() ===3){
+        } else if (player2.getScore() === 3) {
             console.log(`${player2.name} is the winner!`)
         }
     }
     return { playGame, player1, player2, playRound };
 })();
+
+const DOMMaster = (function () {
+    const body = document.body;
+    const gameBoard = document.querySelector('.gameBoardContainer');
+    const renderBoard = () => {
+        let board = GameBoard.getBoard();
+        board.forEach((cell, index) => {
+            let domCell = document.getElementById(`${index}`);
+            let existingP = domCell.querySelector('p');
+            if (existingP) {
+                domCell.removeChild(existingP);
+            }
+            let cellMark = document.createElement('p');
+            cellMark.textContent = cell;
+            domCell.appendChild(cellMark);
+        })
+    }
+    return { renderBoard }
+
+})()
