@@ -91,12 +91,10 @@ const GameMaster = (function () {
         }
         return { getScore, resetScore, playTurn, name };
     }
-    const player1 = createPlayer('Player 1', 'X');
-    const player2 = createPlayer('Player 2', 'O');
-
+    const player1 = createPlayer('player1', 'X');
+    const player2 = createPlayer('player2', 'O');
     const playRound = () => {
         GameBoard.resetBoard();
-        GameBoard.printBoard();
         DOMMaster.renderBoard();
         while (!player1.playTurn() && !player2.playTurn());
         console.log(`${player1.name}: ${player1.getScore()}  ${player2.name}: ${player2.getScore()}`);
@@ -120,6 +118,22 @@ const GameMaster = (function () {
 const DOMMaster = (function () {
     const body = document.body;
     const gameBoard = document.querySelector('.gameBoardContainer');
+    const playBtn = body.querySelector('.playBtn');
+    const nameModal = body.querySelector('#nameModal');
+    const gameAnnouncer = body.querySelector('#gameAnnouncer');
+
+    const announce = (announcement) =>{
+        let message = document.createElement('p');
+        message.textContent = announcement;
+        gameAnnouncer.appendChild(message);
+    }
+
+
+    playBtn.addEventListener('click', () => {
+        nameModal.showModal();
+    })
+
+
     const renderBoard = () => {
         let board = GameBoard.getBoard();
         board.forEach((cell, index) => {

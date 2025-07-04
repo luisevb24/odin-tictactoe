@@ -2,6 +2,8 @@
     font-family: 'Inter Tight', sans-serif;
     font-size: medium;
     box-sizing: border-box;
+    color: lightblue;
+    margin: 0;
 }
 
 body {
@@ -16,6 +18,9 @@ body {
 
 .header {
     text-align: center;
+    width: 100%;
+    padding: 25px;
+    margin-top: 10px;
 }
 
 .header h1 {
@@ -23,10 +28,44 @@ body {
     color: lightblue;
 }
 
+.game {
+    display: grid;
+    grid-template-columns: 1fr 300px 1fr;
+    justify-items: center;
+    align-items: center;
+    gap: 50px;
+    width: 100%;
+}
+
+.score {
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-self: self-start;
+}
+
+.playBtn {
+    text-align: center;
+    padding: 15px;
+    border: 2px solid lightblue;
+    background-color: brown;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.playBtn:hover {
+    color: brown;
+    background-color: lightblue;
+}
+
 .gameBoardContainer {
     display: flex;
     flex-wrap: wrap;
     width: 300px;
+    min-width: 300px;
 }
 
 .cell {
@@ -45,7 +84,7 @@ body {
 }
 
 .cell p {
-    color: brown;
+    color: lightblue;
     font-size: 2.5rem;
     font-weight: 800;
 }
