@@ -29,6 +29,24 @@ const GameMaster = (function () {
         const getScore = () => score;
         const addPoint = () => ++score;
         const resetScore = () => score = 0;
+
+        return { getScore, resetScore, mark, name, addPoint };
+    }
+    const player1 = createPlayer('player1', 'X');
+    const player2 = createPlayer('player2', 'O');
+    const players = [player1, player2];
+    let currentPlayerIndex = 0;
+    const getCurrentPlayer = () => players[currentPlayerIndex];
+    const switchTurn = () => {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+    }
+
+    const playTurn = (index) => {
+        const currentPlayer = getCurrentPlayer();
+        const playerMark = currentPlayer.mark;
+        const success = GameBoard.placeMark(index, playerMark)
+        if (!success) return { overState: false };
+
         const checkWinCondition = () => {
             const winScenarios = [
                 [0, 1, 2],
@@ -45,7 +63,7 @@ const GameMaster = (function () {
                 const secondIndex = scenario[1];
                 const thirdIndex = scenario[2];
                 if (board[firstIndex] !== null) {
-                    if (board[firstIndex] === mark && board[secondIndex] === mark && board[thirdIndex] === mark) {
+                    if (board[firstIndex] === playerMark && board[secondIndex] === playerMark && board[thirdIndex] === playerMark) {
                         return true;
                     }
                 }
@@ -55,64 +73,36 @@ const GameMaster = (function () {
             const board = GameBoard.getBoard();
             if (board.includes(null)) return false;
             return true;
-        }
-        const declareTie = () => console.log("It's a tie");
-        const declareWin = () => {
-            console.log(`${name} wins!`);
-            addPoint();
-        }
-        const playTurn = () => {
-            let boardIndex = prompt(`${name} Play your turn!`);
-            if (boardIndex === null) return;
-            boardIndex = parseInt(boardIndex, 10);
-            let placedMark = GameBoard.placeMark(boardIndex, mark);
-            while (!placedMark) {
-                boardIndex = prompt(`Invalid cell`), 10;
-                if (boardIndex === null) return;
-                boardIndex = parseInt(boardIndex, 10);
-                placedMark = GameBoard.placeMark(boardIndex, mark);
-            };
+        };
+        DOMMaster.renderBoard();
 
-            if (checkWinCondition()) {
-                DOMMaster.renderBoard();
-                GameBoard.printBoard();
-                declareWin();
-                return true;
-            }
-            if (checkTie()) {
-                DOMMaster.renderBoard();
-                GameBoard.printBoard();
-                declareTie();
-                return true;
-            }
+        if (checkWinCondition()) {
+            DOMMaster.announce(`${currentPlayer.name} wins!`)
+            currentPlayer.addPoint();
             DOMMaster.renderBoard();
-            GameBoard.printBoard();
-            return false;
+            return { overState: true, winner: currentPlayer };
         }
-        return { getScore, resetScore, playTurn, name };
+        if (checkTie()) {
+            DOMMaster.announce("It's a tie!")
+            DOMMaster.renderBoard();
+            return { overState: true, winner: null };
+        }
+        switchTurn();
+        return { overState: false };
     }
-    const player1 = createPlayer('player1', 'X');
-    const player2 = createPlayer('player2', 'O');
     const playRound = () => {
         GameBoard.resetBoard();
         DOMMaster.renderBoard();
-        while (!player1.playTurn() && !player2.playTurn());
-        console.log(`${player1.name}: ${player1.getScore()}  ${player2.name}: ${player2.getScore()}`);
-    }
+        DOMMaster.renderScores();
+        DOMMaster.announce(`${getCurrentPlayer().name}'s turn`);
+    };
 
     const playGame = () => {
         player1.resetScore();
         player2.resetScore();
-        while (player1.getScore() < 3 && player2.getScore() < 3) {
-            playRound();
-        }
-        if (player1.getScore() === 3) {
-            console.log(`${player1.name} is the winner!`);
-        } else if (player2.getScore() === 3) {
-            console.log(`${player2.name} is the winner!`)
-        }
+        playRound();
     }
-    return { playGame, player1, player2, playRound };
+    return { playGame, player1, player2, playRound, playTurn };
 })();
 
 const DOMMaster = (function () {
@@ -121,17 +111,66 @@ const DOMMaster = (function () {
     const playBtn = body.querySelector('.playBtn');
     const nameModal = body.querySelector('#nameModal');
     const gameAnnouncer = body.querySelector('#gameAnnouncer');
+    const gameCells = document.querySelectorAll('.cell');
+    const scoreBoard = document.querySelector('.score');
+    const nameForm = document.querySelector('#nameForm');
 
-    const announce = (announcement) =>{
+    gameCells.forEach(cell => {
+        cell.addEventListener('click', (event) => {
+            const targetCell = event.target;
+            const cellIndex = targetCell.getAttribute('data-id');
+            const result = GameMaster.playTurn(parseInt(cellIndex));
+            if (result.overState) {
+                if (result.winner === null) {
+                    announce(`It's a tie!`);
+                } else {
+                    announce(`${result.winner.name} wins!`)
+                }
+            }
+        })
+    })
+
+
+    const announce = (announcement) => {
+        let pMessage = gameAnnouncer.querySelector('p');
+        if (pMessage) {
+            gameAnnouncer.removeChild(pMessage);
+        }
         let message = document.createElement('p');
+        message.classList.add('announce');
         message.textContent = announcement;
         gameAnnouncer.appendChild(message);
     }
 
+    const renderScores = () => {
+        const p1Score = GameMaster.player1.getScore();
+        const p2Score = GameMaster.player2.getScore();
+        const previousScores = scoreBoard.querySelectorAll('p');
+        previousScores.forEach((p) => {
+            scoreBoard.removeChild(p);
+        })
+        const p1Node = document.createElement('p');
+        const p2Node = document.createElement('p');
+        p1Node.textContent = `${GameMaster.player1.name}: ${p1Score}`;
+        p2Node.textContent = `${GameMaster.player2.name}: ${p2Score}`;
+        scoreBoard.appendChild(p1Node);
+        scoreBoard.appendChild(p2Node);
+    }
 
     playBtn.addEventListener('click', () => {
         nameModal.showModal();
+        announce('Welcome!');
+        GameMaster.playGame();
     })
+
+    nameForm.addEventListener('submit', () => {    
+        const nameData = new FormData(nameForm);
+        const p1Name = nameData.get('player1-name');
+        const p2Name = nameData.get('player2-name');
+        GameMaster.player1.name = p1Name;
+        GameMaster.player2.name = p2Name;
+    })
+
 
 
     const renderBoard = () => {
@@ -147,6 +186,6 @@ const DOMMaster = (function () {
             domCell.appendChild(cellMark);
         })
     }
-    return { renderBoard }
+    return { renderBoard, announce, renderScores }
 
 })()

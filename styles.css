@@ -40,10 +40,14 @@ body {
 .score {
     font-size: 1.2rem;
     font-weight: 600;
-    text-align: center;
+    text-align: start;
     display: flex;
     flex-direction: column;
-    align-self: self-start;
+    gap: 100px;
+}
+
+.score>p {
+    font-size: 1.5rem;
 }
 
 .playBtn {
@@ -87,4 +91,18 @@ body {
     color: lightblue;
     font-size: 2.5rem;
     font-weight: 800;
+}
+
+#gameAnnouncer {
+    height: 50px;
+    background-color: lightblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.announce {
+    color: brown;
+    font-size: 1.5rem;
 }
