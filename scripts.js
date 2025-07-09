@@ -122,7 +122,13 @@ const GameMaster = (function () {
         player2.resetScore();
         playRound();
     }
-    return { playGame, player1, player2, playRound, playTurn, isRoundOn, endRound };
+
+    const getP1Name = () => player1.name;
+    const getP2Name = () => player2.name;
+    const setP1Name = (name) => player1.name = name;
+    const setP2Name = (name) => player2.name = name;
+
+    return { playGame, getP1Name, getP2Name, setP1Name, setP2Name, playRound, playTurn, isRoundOn, endRound, };
 })();
 
 const DOMMaster = (function () {
@@ -175,8 +181,8 @@ const DOMMaster = (function () {
         const p2Name = document.createElement('p');
         const p1Node = document.createElement('p');
         const p2Node = document.createElement('p');
-        p1Name.textContent = GameMaster.player1.name;
-        p2Name.textContent = GameMaster.player2.name;
+        p1Name.textContent = GameMaster.getP1Name();
+        p2Name.textContent = GameMaster.getP2Name();
         p1Node.textContent = p1Score;
         p2Node.textContent = p2Score;
         scoreBoard.appendChild(p1Name);
@@ -188,15 +194,14 @@ const DOMMaster = (function () {
     playBtn.addEventListener('click', () => {
         nameModal.showModal();
         announce('Welcome!');
-        GameMaster.playGame();
     })
 
     nameForm.addEventListener('submit', () => {
         const nameData = new FormData(nameForm);
         const p1Name = nameData.get('player1-name');
         const p2Name = nameData.get('player2-name');
-        GameMaster.player1.name = p1Name;
-        GameMaster.player2.name = p2Name;
+        GameMaster.setP1Name(p1Name);
+        GameMaster.setP2Name(p2Name);
         GameMaster.playGame();
     })
 
