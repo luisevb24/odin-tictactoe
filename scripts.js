@@ -77,17 +77,17 @@ const GameMaster = (function () {
         DOMMaster.renderBoard();
 
         if (checkWinCondition()) {
-            DOMMaster.announce(`${currentPlayer.name} wins!`)
             currentPlayer.addPoint();
             DOMMaster.renderBoard();
             return { overState: true, winner: currentPlayer };
         }
         if (checkTie()) {
-            DOMMaster.announce("It's a tie!")
             DOMMaster.renderBoard();
             return { overState: true, winner: null };
         }
         switchTurn();
+        DOMMaster.renderScores();
+        DOMMaster.announce(`${getCurrentPlayer().name}'s turn`);
         return { overState: false };
     }
     const playRound = () => {
@@ -149,11 +149,17 @@ const DOMMaster = (function () {
         previousScores.forEach((p) => {
             scoreBoard.removeChild(p);
         })
+        const p1Name = document.createElement('p');
+        const p2Name = document.createElement('p');
         const p1Node = document.createElement('p');
         const p2Node = document.createElement('p');
-        p1Node.textContent = `${GameMaster.player1.name}: ${p1Score}`;
-        p2Node.textContent = `${GameMaster.player2.name}: ${p2Score}`;
+        p1Name.textContent = GameMaster.player1.name;
+        p2Name.textContent = GameMaster.player2.name;
+        p1Node.textContent = p1Score;
+        p2Node.textContent = p2Score;
+        scoreBoard.appendChild(p1Name);
         scoreBoard.appendChild(p1Node);
+        scoreBoard.appendChild(p2Name);
         scoreBoard.appendChild(p2Node);
     }
 
@@ -163,7 +169,7 @@ const DOMMaster = (function () {
         GameMaster.playGame();
     })
 
-    nameForm.addEventListener('submit', () => {    
+    nameForm.addEventListener('submit', () => {
         const nameData = new FormData(nameForm);
         const p1Name = nameData.get('player1-name');
         const p2Name = nameData.get('player2-name');
@@ -189,3 +195,9 @@ const DOMMaster = (function () {
     return { renderBoard, announce, renderScores }
 
 })()
+
+//Check for when the game is over;
+//Change the play button for a next round button, or maybe start it automatically.
+//Add 3 wins logic
+//Style names modal
+//

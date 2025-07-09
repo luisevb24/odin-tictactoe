@@ -43,7 +43,7 @@ body {
     text-align: start;
     display: flex;
     flex-direction: column;
-    gap: 100px;
+    gap: 15px;
 }
 
 .score>p {
