@@ -35,6 +35,45 @@ const GameMaster = (function () {
     const player1 = createPlayer('player1', 'X');
     const player2 = createPlayer('player2', 'O');
     const players = [player1, player2];
+
+    let gameOn = false;
+    let roundOn = false;
+
+    const isGameOn = () => roundOn;
+    const isRoundOn = () => roundOn;
+    const endRound = () => roundOn = false;
+
+    const checkTie = () => {
+        const board = GameBoard.getBoard();
+        if (board.includes(null)) return false;
+        return true;
+    };
+
+    const checkWinCondition = () => {
+        const currentPlayer = getCurrentPlayer();
+        const playerMark = currentPlayer.mark;
+        const winScenarios = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]]
+        const board = GameBoard.getBoard();
+        return winScenarios.some((scenario) => {
+            const firstIndex = scenario[0];
+            const secondIndex = scenario[1];
+            const thirdIndex = scenario[2];
+            if (board[firstIndex] !== null) {
+                if (board[firstIndex] === playerMark && board[secondIndex] === playerMark && board[thirdIndex] === playerMark) {
+                    return true;
+                }
+            }
+        });
+    };
+
     let currentPlayerIndex = 0;
     const getCurrentPlayer = () => players[currentPlayerIndex];
     const switchTurn = () => {
@@ -42,55 +81,35 @@ const GameMaster = (function () {
     }
 
     const playTurn = (index) => {
-        const currentPlayer = getCurrentPlayer();
-        const playerMark = currentPlayer.mark;
-        const success = GameBoard.placeMark(index, playerMark)
-        if (!success) return { overState: false };
+        if (gameOn && roundOn) {
+            const currentPlayer = getCurrentPlayer();
+            const playerMark = currentPlayer.mark;
+            const success = GameBoard.placeMark(index, playerMark)
+            if (!success) return { overState: false };
 
-        const checkWinCondition = () => {
-            const winScenarios = [
-                [0, 1, 2],
-                [3, 4, 5],
-                [6, 7, 8],
-                [0, 3, 6],
-                [1, 4, 7],
-                [2, 5, 8],
-                [0, 4, 8],
-                [2, 4, 6]]
-            const board = GameBoard.getBoard();
-            return winScenarios.some((scenario) => {
-                const firstIndex = scenario[0];
-                const secondIndex = scenario[1];
-                const thirdIndex = scenario[2];
-                if (board[firstIndex] !== null) {
-                    if (board[firstIndex] === playerMark && board[secondIndex] === playerMark && board[thirdIndex] === playerMark) {
-                        return true;
-                    }
-                }
-            });
-        };
-        const checkTie = () => {
-            const board = GameBoard.getBoard();
-            if (board.includes(null)) return false;
-            return true;
-        };
-        DOMMaster.renderBoard();
+            DOMMaster.renderBoard();
 
-        if (checkWinCondition()) {
-            currentPlayer.addPoint();
-            DOMMaster.renderBoard();
-            return { overState: true, winner: currentPlayer };
+            if (checkWinCondition()) {
+                currentPlayer.addPoint();
+                DOMMaster.renderBoard();
+                return { overState: true, winner: currentPlayer };
+            }
+            if (checkTie()) {
+                DOMMaster.renderBoard();
+                return { overState: true, winner: null };
+            }
+            switchTurn();
+            DOMMaster.renderScores();
+            DOMMaster.announce(`${getCurrentPlayer().name}'s turn`);
+            return { overState: false };
+        } else if (!gameOn) {
+            DOMMaster.announce("Start the game first!");
+        } else if (gameOn && !roundOn) {
+            DOMMaster.announce("Go next round!");
         }
-        if (checkTie()) {
-            DOMMaster.renderBoard();
-            return { overState: true, winner: null };
-        }
-        switchTurn();
-        DOMMaster.renderScores();
-        DOMMaster.announce(`${getCurrentPlayer().name}'s turn`);
-        return { overState: false };
-    }
+    };
     const playRound = () => {
+        roundOn = true;
         GameBoard.resetBoard();
         DOMMaster.renderBoard();
         DOMMaster.renderScores();
@@ -98,11 +117,12 @@ const GameMaster = (function () {
     };
 
     const playGame = () => {
+        gameOn = true;
         player1.resetScore();
         player2.resetScore();
         playRound();
     }
-    return { playGame, player1, player2, playRound, playTurn };
+    return { playGame, player1, player2, playRound, playTurn, isRoundOn, endRound };
 })();
 
 const DOMMaster = (function () {
@@ -122,8 +142,10 @@ const DOMMaster = (function () {
             const result = GameMaster.playTurn(parseInt(cellIndex));
             if (result.overState) {
                 if (result.winner === null) {
+                    GameMaster.endRound();
                     announce(`It's a tie!`);
                 } else {
+                    GameMaster.endRound();
                     announce(`${result.winner.name} wins!`)
                 }
             }
@@ -175,6 +197,7 @@ const DOMMaster = (function () {
         const p2Name = nameData.get('player2-name');
         GameMaster.player1.name = p1Name;
         GameMaster.player2.name = p2Name;
+        GameMaster.playGame();
     })
 
 
@@ -199,5 +222,4 @@ const DOMMaster = (function () {
 //Check for when the game is over;
 //Change the play button for a next round button, or maybe start it automatically.
 //Add 3 wins logic
-//Style names modal
 //
