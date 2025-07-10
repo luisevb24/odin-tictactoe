@@ -18,7 +18,7 @@
         <h1>Tic Tac Toe</h1>
     </div>
     <div class="game">
-        <div class="playDiv"><button class="playBtn">Play</button></div>
+        <div class="btnCntnr"><button class="playBtn">Play</button></div>
         <div class="gameBoardContainer">
             <div class="cell" data-id="0" id="0"></div>
             <div class="cell" data-id="1" id="1"></div>
@@ -34,15 +34,22 @@
         </div>
     </div>
     <div id="gameAnnouncer">
+        <p class="announce">Welcome!</p>
     </div>
     <dialog id="nameModal">
         <form action="" id="nameForm" method="dialog">
-            <p>Please choose a name</p>
-            <label for="player1-name">X</label>
-            <input type="text" id="player1-name" name="player1-name">
-            <label for="player2-name">O</label>
-            <input type="text" id="player2-name" name="player2-name">
-            <button type="submit">Continue</button>
+            <p>Names</p>
+            <div class="inputsSection">
+                <div class="nameInput">
+                    <label for="player1-name">X</label>
+                    <input type="text" id="player1-name" name="player1-name">
+                </div>
+                <div class="nameInput">
+                    <label for="player2-name">O</label>
+                    <input type="text" id="player2-name" name="player2-name">
+                </div>
+            </div>
+            <button type="submit" id="submit">Play</button>
         </form>
     </dialog>
 </body>

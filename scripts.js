@@ -39,7 +39,7 @@ const GameMaster = (function () {
     let gameOn = false;
     let roundOn = false;
 
-    const isGameOn = () => roundOn;
+    const isGameOn = () => gameOn;
     const isRoundOn = () => roundOn;
     const endRound = () => roundOn = false;
 
@@ -86,20 +86,16 @@ const GameMaster = (function () {
             const playerMark = currentPlayer.mark;
             const success = GameBoard.placeMark(index, playerMark)
             if (!success) return { overState: false };
-
             DOMMaster.renderBoard();
-
+            DOMMaster.renderScores();
             if (checkWinCondition()) {
                 currentPlayer.addPoint();
-                DOMMaster.renderBoard();
                 return { overState: true, winner: currentPlayer };
             }
             if (checkTie()) {
-                DOMMaster.renderBoard();
                 return { overState: true, winner: null };
             }
             switchTurn();
-            DOMMaster.renderScores();
             DOMMaster.announce(`${getCurrentPlayer().name}'s turn`);
             return { overState: false };
         } else if (!gameOn) {
@@ -127,8 +123,10 @@ const GameMaster = (function () {
     const getP2Name = () => player2.name;
     const setP1Name = (name) => player1.name = name;
     const setP2Name = (name) => player2.name = name;
+    const getP1Score = () => player1.getScore();
+    const getP2Score = () => player2.getScore();
 
-    return { playGame, getP1Name, getP2Name, setP1Name, setP2Name, playRound, playTurn, isRoundOn, endRound, };
+    return { playGame, getP1Name, getP2Name, setP1Name, setP2Name,getP1Score, getP2Score, playRound, playTurn, isRoundOn, endRound };
 })();
 
 const DOMMaster = (function () {
@@ -147,6 +145,7 @@ const DOMMaster = (function () {
             const cellIndex = targetCell.getAttribute('data-id');
             const result = GameMaster.playTurn(parseInt(cellIndex));
             if (result.overState) {
+                renderScores();
                 if (result.winner === null) {
                     GameMaster.endRound();
                     announce(`It's a tie!`);
@@ -171,8 +170,8 @@ const DOMMaster = (function () {
     }
 
     const renderScores = () => {
-        const p1Score = GameMaster.player1.getScore();
-        const p2Score = GameMaster.player2.getScore();
+        const p1Score = GameMaster.getP1Score();
+        const p2Score = GameMaster.getP2Score();
         const previousScores = scoreBoard.querySelectorAll('p');
         previousScores.forEach((p) => {
             scoreBoard.removeChild(p);
@@ -193,7 +192,6 @@ const DOMMaster = (function () {
 
     playBtn.addEventListener('click', () => {
         nameModal.showModal();
-        announce('Welcome!');
     })
 
     nameForm.addEventListener('submit', () => {
@@ -205,6 +203,9 @@ const DOMMaster = (function () {
         GameMaster.playGame();
     })
 
+    const clearBtn = () => {
+        
+    }
 
 
     const renderBoard = () => {

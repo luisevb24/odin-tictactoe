@@ -6,6 +6,12 @@
     margin: 0;
 }
 
+:root {
+    --main: brown;
+    --secondary: lightblue;
+    --complementary: #2AA52A;
+}
+
 body {
     background-color: brown;
     display: flex;
@@ -25,12 +31,12 @@ body {
 
 .header h1 {
     font-size: 2rem;
-    color: lightblue;
+    color: var(--secondary);
 }
 
 .game {
     display: grid;
-    grid-template-columns: 1fr 300px 1fr;
+    grid-template-columns: 1fr 333px 1fr;
     justify-items: center;
     align-items: center;
     gap: 50px;
@@ -40,10 +46,10 @@ body {
 .score {
     font-size: 1.2rem;
     font-weight: 600;
-    text-align: start;
+    text-align: center;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
 }
 
 .score>p {
@@ -53,30 +59,32 @@ body {
 .playBtn {
     text-align: center;
     padding: 15px;
-    border: 2px solid lightblue;
-    background-color: brown;
+    border: 2px solid var(--secondary);
+    background-color: var(--secondary);
     border-radius: 5px;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 700;
+    min-width: 150px;
+    color: rgb(165, 42, 42);
 }
 
 .playBtn:hover {
-    color: brown;
-    background-color: lightblue;
+    color: var(--secondary);
+    background-color: brown;
 }
 
 .gameBoardContainer {
     display: flex;
     flex-wrap: wrap;
-    width: 300px;
-    min-width: 300px;
+    width: 333px;
+    min-width: 333px;
 }
 
 .cell {
     background-color: brown;
-    width: 100px;
-    height: 100px;
-    outline: 2px solid lightblue;
+    width: 111px;
+    height: 111px;
+    outline: 2px solid var(--secondary);
     text-align: center;
     display: flex;
     justify-content: center;
@@ -84,25 +92,103 @@ body {
 }
 
 .cell:hover {
-    background-color: lightblue;
+    background-color: var(--secondary);
 }
 
 .cell p {
-    color: lightblue;
+    color: var(--secondary);
     font-size: 2.5rem;
     font-weight: 800;
 }
 
+.cell:hover>p {
+    color: brown;
+}
+
 #gameAnnouncer {
     height: 50px;
-    background-color: lightblue;
+    background-color: var(--complementary);
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 25px;
+    border-radius: 10px;
 }
 
 .announce {
-    color: brown;
+    color: white;
     font-size: 1.5rem;
+    font-weight: 600;
+}
+
+#nameModal[open] {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: none;
+  border-radius: 8px;
+  background: var(--main);
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  padding: 0;
+  outline: 4px solid var(--complementary);
+}
+
+#nameForm {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+#nameForm > p {
+    color: var(--secondary);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.nameInput {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.inputsSection {
+    display: flex;
+    gap: 15px;
+}
+
+.nameInput > label {
+    color: var(--secondary);
+    font-size: 2rem;
+}
+
+.nameInput > input {
+    background-color: var(--secondary);
+    color: var(--main);
+    font-size: 1.5rem;
+    line-height: 2rem;
+    text-align: center;
+    width: 75%;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.nameInput > input:focus {
+    outline: none;
+}
+
+#submit {
+    margin-top: 15px;
+    text-align: center;
+    padding: 5px;
+    border: 1px solid var(--secondary);
+    background-color: var(--secondary);
+    border-radius: 5px;
+    font-size: 1.5rem;
+    font-weight: 500;
+    min-width: 150px;
+    color: rgb(165, 42, 42);
 }
