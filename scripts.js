@@ -126,7 +126,7 @@ const GameMaster = (function () {
     const getP1Score = () => player1.getScore();
     const getP2Score = () => player2.getScore();
 
-    return { playGame, getP1Name, getP2Name, setP1Name, setP2Name,getP1Score, getP2Score, playRound, playTurn, isRoundOn, endRound };
+    return { playGame, getP1Name, getP2Name, setP1Name, setP2Name, getP1Score, getP2Score, playRound, playTurn, isRoundOn, endRound };
 })();
 
 const DOMMaster = (function () {
@@ -138,6 +138,7 @@ const DOMMaster = (function () {
     const gameCells = document.querySelectorAll('.cell');
     const scoreBoard = document.querySelector('.score');
     const nameForm = document.querySelector('#nameForm');
+    const btnCntnr = document.querySelector('.btnCntnr');
 
     gameCells.forEach(cell => {
         cell.addEventListener('click', (event) => {
@@ -146,6 +147,7 @@ const DOMMaster = (function () {
             const result = GameMaster.playTurn(parseInt(cellIndex));
             if (result.overState) {
                 renderScores();
+                createRoundBtn();
                 if (result.winner === null) {
                     GameMaster.endRound();
                     announce(`It's a tie!`);
@@ -157,6 +159,16 @@ const DOMMaster = (function () {
         })
     })
 
+    const createRoundBtn = () => {
+        const roundBtn = document.createElement('button');
+        roundBtn.classList.add('roundBtn');
+        roundBtn.textContent = 'Next Round';
+        btnCntnr.appendChild(roundBtn);
+        roundBtn.addEventListener('click', () => {
+            GameMaster.playRound();
+            roundBtn.remove();  
+        });
+    }
 
     const announce = (announcement) => {
         let pMessage = gameAnnouncer.querySelector('p');
@@ -177,9 +189,13 @@ const DOMMaster = (function () {
             scoreBoard.removeChild(p);
         })
         const p1Name = document.createElement('p');
+        p1Name.classList.add('name');
         const p2Name = document.createElement('p');
+        p2Name.classList.add('name');
         const p1Node = document.createElement('p');
+        p1Node.classList.add('playerScore');
         const p2Node = document.createElement('p');
+        p2Node.classList.add('playerScore');
         p1Name.textContent = GameMaster.getP1Name();
         p2Name.textContent = GameMaster.getP2Name();
         p1Node.textContent = p1Score;
@@ -192,6 +208,7 @@ const DOMMaster = (function () {
 
     playBtn.addEventListener('click', () => {
         nameModal.showModal();
+        playBtn.remove();
     })
 
     nameForm.addEventListener('submit', () => {
@@ -203,9 +220,7 @@ const DOMMaster = (function () {
         GameMaster.playGame();
     })
 
-    const clearBtn = () => {
-        
-    }
+
 
 
     const renderBoard = () => {
