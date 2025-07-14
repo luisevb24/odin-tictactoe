@@ -119,6 +119,21 @@ const GameMaster = (function () {
         playRound();
     }
 
+    const checkGameOver = () => {
+        if (player1.getScore() = 3) {
+            endGame(player1.name);
+            return true;
+        };
+        if (player2.getScore() = 3) {
+            endGame(player2.name);
+            return true;
+        }
+    }
+
+    const endGame = (winner) => {
+        DOMMaster.endGameModal(winner);
+    }
+
     const getP1Name = () => player1.name;
     const getP2Name = () => player2.name;
     const setP1Name = (name) => player1.name = name;
@@ -126,7 +141,7 @@ const GameMaster = (function () {
     const getP1Score = () => player1.getScore();
     const getP2Score = () => player2.getScore();
 
-    return { playGame, getP1Name, getP2Name, setP1Name, setP2Name, getP1Score, getP2Score, playRound, playTurn, isRoundOn, endRound };
+    return { playGame, getP1Name, getP2Name, setP1Name, setP2Name, getP1Score, getP2Score, playRound, playTurn, isRoundOn, endRound, checkGameOver };
 })();
 
 const DOMMaster = (function () {
@@ -139,6 +154,7 @@ const DOMMaster = (function () {
     const scoreBoard = document.querySelector('.score');
     const nameForm = document.querySelector('#nameForm');
     const btnCntnr = document.querySelector('.btnCntnr');
+    const endGame = document.querySelector('#endGame');
 
     gameCells.forEach(cell => {
         cell.addEventListener('click', (event) => {
@@ -166,7 +182,7 @@ const DOMMaster = (function () {
         btnCntnr.appendChild(roundBtn);
         roundBtn.addEventListener('click', () => {
             GameMaster.playRound();
-            roundBtn.remove();  
+            roundBtn.remove();
         });
     }
 
@@ -220,7 +236,11 @@ const DOMMaster = (function () {
         GameMaster.playGame();
     })
 
-
+    const endGameModal = (winner) => {
+        const winnerP = endGame.querySelector('#winner');
+        winnerP.textContent = winner;
+        endGame.showModal();
+    }
 
 
     const renderBoard = () => {
@@ -236,11 +256,9 @@ const DOMMaster = (function () {
             domCell.appendChild(cellMark);
         })
     }
-    return { renderBoard, announce, renderScores }
+    return { renderBoard, announce, renderScores, endGameModal }
 
 })()
 
 //Check for when the game is over;
-//Change the play button for a next round button, or maybe start it automatically.
 //Add 3 wins logic
-//

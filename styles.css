@@ -58,7 +58,14 @@ body {
 
 .score > p.playerScore {
     font-size: 1.5rem;
-    color: var(--complementary);
+    color: white;
+}
+
+.score > p.name {
+    padding: 5px;
+    border-radius: 5px;
+    color: white;
+    background-color: var(--complementary);
 }
 
 .playBtn,
@@ -187,7 +194,8 @@ body {
     outline: none;
 }
 
-#submit {
+#submit,
+#playAgain {
     margin-top: 15px;
     text-align: center;
     padding: 5px;

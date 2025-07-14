@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="./images/tttwhite.svg">
 </head>
 
 <body>
@@ -18,7 +19,7 @@
         <h1>Tic Tac Toe</h1>
     </div>
     <div class="game">
-        <div class="btnCntnr"><button class="playBtn">Play</button></div>
+        <div class="btnCntnr"><button class="playBtn">Start</button></div>
         <div class="gameBoardContainer">
             <div class="cell" data-id="0" id="0"></div>
             <div class="cell" data-id="1" id="1"></div>
@@ -51,6 +52,11 @@
             </div>
             <button type="submit" id="submit">Play</button>
         </form>
+    </dialog>
+    <dialog id="endGame">
+        <h2>We have a winner!</h2>
+        <p id="winner"></p>
+        <button id="playAgain" type="submit">Play again</button>
     </dialog>
 </body>
 
