@@ -120,11 +120,11 @@ const GameMaster = (function () {
     }
 
     const checkGameOver = () => {
-        if (player1.getScore() = 3) {
+        if (player1.getScore() == 3) {
             endGame(player1.name);
             return true;
         };
-        if (player2.getScore() = 3) {
+        if (player2.getScore() == 3) {
             endGame(player2.name);
             return true;
         }
@@ -155,6 +155,12 @@ const DOMMaster = (function () {
     const nameForm = document.querySelector('#nameForm');
     const btnCntnr = document.querySelector('.btnCntnr');
     const endGame = document.querySelector('#endGame');
+    const playAgain = document.querySelector('#playAgain');
+
+    playAgain.addEventListener('click', () => {
+        endGame.close();
+        GameMaster.playGame();
+    })
 
     gameCells.forEach(cell => {
         cell.addEventListener('click', (event) => {
@@ -162,6 +168,7 @@ const DOMMaster = (function () {
             const cellIndex = targetCell.getAttribute('data-id');
             const result = GameMaster.playTurn(parseInt(cellIndex));
             if (result.overState) {
+                if(GameMaster.checkGameOver()) return true;
                 renderScores();
                 createRoundBtn();
                 if (result.winner === null) {
@@ -238,7 +245,7 @@ const DOMMaster = (function () {
 
     const endGameModal = (winner) => {
         const winnerP = endGame.querySelector('#winner');
-        winnerP.textContent = winner;
+        winnerP.textContent = `${winner}`;
         endGame.showModal();
     }
 

@@ -52,16 +52,16 @@ body {
     gap: 20px;
 }
 
-.score > p {
+.score>p {
     font-size: 1.5rem;
 }
 
-.score > p.playerScore {
+.score>p.playerScore {
     font-size: 1.5rem;
     color: white;
 }
 
-.score > p.name {
+.score>p.name {
     padding: 5px;
     border-radius: 5px;
     color: white;
@@ -136,16 +136,16 @@ body {
 }
 
 #nameModal[open] {
-  position: fixed;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border: none;
-  border-radius: 8px;
-  background: var(--main);
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  padding: 0;
-  outline: 4px solid var(--complementary);
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: none;
+    border-radius: 8px;
+    background: var(--main);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 0;
+    outline: 4px solid var(--complementary);
 }
 
 #nameForm {
@@ -156,7 +156,7 @@ body {
     gap: 20px;
 }
 
-#nameForm > p {
+#nameForm>p {
     color: var(--secondary);
     font-size: 1.5rem;
     font-weight: 600;
@@ -174,12 +174,12 @@ body {
     gap: 15px;
 }
 
-.nameInput > label {
+.nameInput>label {
     color: var(--secondary);
     font-size: 2rem;
 }
 
-.nameInput > input {
+.nameInput>input {
     background-color: var(--secondary);
     color: var(--main);
     font-size: 1.5rem;
@@ -190,7 +190,7 @@ body {
     padding: 5px;
 }
 
-.nameInput > input:focus {
+.nameInput>input:focus {
     outline: none;
 }
 
@@ -206,4 +206,34 @@ body {
     font-weight: 500;
     min-width: 150px;
     color: rgb(165, 42, 42);
+}
+
+#endGame[open] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+    gap: 15px;
+    font-size: 2rem;
+    font-weight: 600;
+    padding: 30px;
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: none;
+    border-radius: 8px;
+    background: var(--main);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    outline: 4px solid var(--complementary);
+}
+
+#endGame h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+#endGame p {
+    font-size: 2rem;
+    font-weight: 600;
 }
