@@ -157,6 +157,23 @@ const DOMMaster = (function () {
     const endGame = document.querySelector('#endGame');
     const playAgain = document.querySelector('#playAgain');
 
+    const renderRstBtn = () => {
+        const resetBtn = document.createElement('button');
+        resetBtn.classList.add('resetBtn');
+        resetBtn.textContent = "Restart";
+        btnCntnr.appendChild(resetBtn);
+        resetBtn.addEventListener('click', () => {
+            GameMaster.playGame();
+            clearBtns();
+        });
+    }
+    const clearBtns = () => {
+        btns = btnCntnr.querySelectorAll('button');
+        btns.forEach((btn) => {
+            btnCntnr.removeChild(btn);
+        });
+    };
+
     playAgain.addEventListener('click', () => {
         endGame.close();
         GameMaster.playGame();
@@ -168,7 +185,7 @@ const DOMMaster = (function () {
             const cellIndex = targetCell.getAttribute('data-id');
             const result = GameMaster.playTurn(parseInt(cellIndex));
             if (result.overState) {
-                if(GameMaster.checkGameOver()) return true;
+                if (GameMaster.checkGameOver()) return true;
                 renderScores();
                 createRoundBtn();
                 if (result.winner === null) {
@@ -232,6 +249,7 @@ const DOMMaster = (function () {
     playBtn.addEventListener('click', () => {
         nameModal.showModal();
         playBtn.remove();
+        renderRstBtn();
     })
 
     nameForm.addEventListener('submit', () => {
